@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "nome": "alan",
+        "email": "alan@email.com",
+        "senha": "senha123",
+        "favoritos": []
+    }
+]
