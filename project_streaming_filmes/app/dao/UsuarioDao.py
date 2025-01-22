@@ -90,20 +90,23 @@ class UsuarioDao:
             raise ValueError("Filme não encontrado.")
         
         # Verifica se o filme já está nos favoritos
-        if any(f.id == filme.id for f in usuario.favoritos):
+        if any(f["id"] == filme.id for f in usuario.favoritos):
             raise ValueError("Filme já está na lista de filmes do usuário.")
-
+        
         # Adiciona o filme aos favoritos do usuário
-        usuario.favoritos.append(filme)
+        usuario.favoritos.append(filme.dict())
 
         # Atualiza os dados no arquivo JSON
+        # Atualiza o usuário encontrado
         for i, u in enumerate(usuarios):
-            if u["id"] == usuario_id:
-                usuarios[i] = usuario.dict()  # Atualiza o usuário encontrado
+            if u.id == usuario_id:  # Acesse o atributo id diretamente
+                usuarios[i] = usuario.dict()  # Use o método dict() para converter o objeto em dicionário
                 break
+
 
         # Escreve as alterações no arquivo
         cls._write_usuarios(usuarios)
+
 
     @classmethod
     def remover_filme_de_usuario(cls, usuario_id: int, filme_id: int):
