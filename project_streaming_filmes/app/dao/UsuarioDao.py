@@ -76,21 +76,34 @@ class UsuarioDao:
 
     @classmethod
     def add_filme_a_usuario(cls, usuario_id: int, filme_id: int):
+        # Lê os dados dos usuários
         usuarios = cls._read_usuarios()
+        
+        # Busca o usuário pelo ID
         usuario = cls.find_usuario_by_id(usuario_id)
-        filme = FilmeDao.find_filme_by_id(filme_id)
-
         if not usuario:
             raise ValueError("Usuário não encontrado.")
         
+        # Busca o filme pelo ID
+        filme = FilmeDao.find_filme_by_id(filme_id)
         if not filme:
             raise ValueError("Filme não encontrado.")
-
-        if filme not in usuario.favoritos: 
-            usuario.favoritos.append(filme)
-            cls._write_usuarios(usuarios)
-        else:
+        
+        # Verifica se o filme já está nos favoritos
+        if any(f.id == filme.id for f in usuario.favoritos):
             raise ValueError("Filme já está na lista de filmes do usuário.")
+
+        # Adiciona o filme aos favoritos do usuário
+        usuario.favoritos.append(filme)
+
+        # Atualiza os dados no arquivo JSON
+        for i, u in enumerate(usuarios):
+            if u["id"] == usuario_id:
+                usuarios[i] = usuario.dict()  # Atualiza o usuário encontrado
+                break
+
+        # Escreve as alterações no arquivo
+        cls._write_usuarios(usuarios)
 
     @classmethod
     def remover_filme_de_usuario(cls, usuario_id: int, filme_id: int):

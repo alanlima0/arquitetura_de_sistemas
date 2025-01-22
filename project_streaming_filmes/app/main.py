@@ -58,7 +58,8 @@ def read_root():
         </header>
         <div class="container">
             <h2>Esta API permite acessar, adicionar, atualizar e excluir filmes, listas e usuários!</h2>
-            <p>Acesse os endpoints para interagir com filmes, listas e usuários cadastrados.</p>
+            <p>Acesse os endpoints para interagir com filmes, listas e usuários cadastrados.</p><br>
+            <a href="http://127.0.0.1:8000/filmes/">Listar Filmes</a>
         </div>
         <footer>
             <p>&copy; 2025 API de Filmes, Listas e Usuários. Todos os direitos reservados.</p>

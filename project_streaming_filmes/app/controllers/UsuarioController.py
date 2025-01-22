@@ -42,7 +42,7 @@ def update_usuario(usuario_id: int, usuario_atualizado: Usuario):
     except ValueError as e:
         raise HTTPException(status_code=404,detail=str(e))
 
-@router.patch('/usuarios/{usuario_id}/filmes/{filme_id}')
+@router.post('/usuarios/{usuario_id}/favoritos/{filme_id}')
 def add_filme_a_usuario(usuario_id: int, filme_id: int):
     try:
         UsuarioService.add_filme_a_usuario(usuario_id, filme_id)
@@ -50,10 +50,10 @@ def add_filme_a_usuario(usuario_id: int, filme_id: int):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.patch('/usuarios/{usuario_id}/filmes/{filme_id}')
-def remover_filme_de_usuario(usuario_id: int, filme_id: int):
-    try:
-        UsuarioService.remover_filme_de_usuario(usuario_id, filme_id)
-        return {'message': 'Filme removido dos favoritos com sucesso.'}
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+#@router.patch('/usuarios/{usuario_id}/filmes/{filme_id}')
+#def remover_filme_de_usuario(usuario_id: int, filme_id: int):
+#    try:
+#        UsuarioService.remover_filme_de_usuario(usuario_id, filme_id)
+#        return {'message': 'Filme removido dos favoritos com sucesso.'}
+#    except ValueError as e:
+#        raise HTTPException(status_code=404, detail=str(e))
