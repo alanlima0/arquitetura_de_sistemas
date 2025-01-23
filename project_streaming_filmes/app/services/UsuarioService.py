@@ -17,12 +17,12 @@ class UsuarioService:
             raise ValueError('Usuário não encontrado.')
     
     @staticmethod
-    def update_usuario(usuario_id: int, usuario_atualizado:Usuario):
+    def update_usuario(usuario_id: int, usuario_atualizado: Usuario):
         if not UsuarioDao.update_usuario(usuario_id, usuario_atualizado):
-            raise ValueError('Usuário não encontrado')
+            raise ValueError('Usuário não encontrado.')
         
     @staticmethod
-    def find_usuario_by_id(usuario_id: int):
+    def find_usuario_by_id(usuario_id: int) -> Usuario:
         usuario = UsuarioDao.find_usuario_by_id(usuario_id)
         if not usuario:
             raise ValueError('Usuário não encontrado.')
@@ -30,7 +30,6 @@ class UsuarioService:
     
     @staticmethod
     def add_filme_a_usuario(usuario_id: int, filme_id: int):
-        
         usuario = UsuarioDao.find_usuario_by_id(usuario_id)
         filme = FilmeDao.find_filme_by_id(filme_id)
 
@@ -41,21 +40,17 @@ class UsuarioService:
             raise ValueError("Filme não encontrado.")
         
         # Chama o método do DAO para adicionar o filme ao usuário
-        if not UsuarioDao.add_filme_a_usuario(usuario_id, filme_id):
-            raise ValueError("Filme já está na lista de filmes do usuário.")
+        UsuarioDao.add_filme_a_usuario(usuario_id, filme_id)
 
     @staticmethod
-    def remover_filme_de_usuario(usuario_id: int, filme_id: int):
-        # Verificar se o filme e o usuário existem
+    def remove_filme_de_usuario(usuario_id: int, filme_id: int):
         usuario = UsuarioDao.find_usuario_by_id(usuario_id)
-        filme = FilmeDao.find_filme_by_id(filme_id)
-
         if not usuario:
             raise ValueError("Usuário não encontrado.")
-        
-        if not filme:
-            raise ValueError("Filme não encontrado.")
 
-        # Chama o método do DAO para remover o filme do usuário
-        if not UsuarioDao.remover_filme_de_usuario(usuario_id, filme_id):
-            raise ValueError("Filme não encontrado na lista de filmes do usuário.")
+        filme = next((f for f in usuario.favoritos if f.id == filme_id), None)
+        if not filme:
+            raise ValueError("Filme não encontrado na lista de favoritos.")
+
+        # Chama o método do DAO para remover o filme da lista de favoritos do usuário
+        UsuarioDao.remove_filme_de_usuario(usuario_id, filme_id)

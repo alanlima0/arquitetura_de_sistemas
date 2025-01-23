@@ -3,9 +3,11 @@ import os
 from typing import List, Optional
 from app.models.Usuario import Usuario
 from app.dao.FilmeDao import FilmeDao
+from app.models.Filme import Filme
 
 
 USUARIOS_FILE = os.path.join(os.path.dirname(__file__), '../data/usuarios.json')
+
 
 class UsuarioDao:
     @staticmethod
@@ -13,13 +15,18 @@ class UsuarioDao:
         try:
             with open(USUARIOS_FILE, 'r') as u:
                 usuarios = json.load(u)
-                return [Usuario(**usuario) for usuario in usuarios]
+                # Converte cada usuário e seus favoritos para objetos
+                return [Usuario(**{
+                    **usuario,
+                    "favoritos": [Filme(**f) for f in usuario.get("favoritos", [])]
+                }) for usuario in usuarios]
         except FileNotFoundError:
             return []
 
     @staticmethod
     def _write_usuarios(usuarios: List[Usuario]):
         with open(USUARIOS_FILE, 'w') as u:
+            # Serializa os usuários e seus favoritos
             json.dump([usuario.dict() for usuario in usuarios], u, indent=4)
 
     @classmethod
@@ -53,75 +60,52 @@ class UsuarioDao:
         usuarios = cls._read_usuarios()
         usuario = cls.find_usuario_by_id(usuario_id)
         if usuario:
-            usuarios.remove(usuario)
+            usuarios = [u for u in usuarios if u.id != usuario_id]
             cls._write_usuarios(usuarios)
             return True
         return False
 
     @classmethod
     def update_usuario(cls, usuario_id: int, usuario_atualizado: Usuario) -> bool:
+        if usuario_atualizado.id is None:
+            usuario_atualizado.id = usuario_id  # Define o id se ele não foi passado
+
         usuarios = cls._read_usuarios()
-        usuario = next((u for u in usuarios if u.id == usuario_id), None)
+        for i, u in enumerate(usuarios):
+            if u.id == usuario_id:
+                usuarios[i] = usuario_atualizado
+                cls._write_usuarios(usuarios)
+                return True
+        return False
 
-        if not usuario:
-            return False
-
-        usuario.nome = usuario_atualizado.nome
-        usuario.email = usuario_atualizado.email
-        usuario.senha = usuario_atualizado.senha
-        usuario.favoritos = usuario_atualizado.favoritos
-
-        cls._write_usuarios(usuarios)
-        return True
 
     @classmethod
     def add_filme_a_usuario(cls, usuario_id: int, filme_id: int):
-        # Lê os dados dos usuários
-        usuarios = cls._read_usuarios()
-        
-        # Busca o usuário pelo ID
         usuario = cls.find_usuario_by_id(usuario_id)
         if not usuario:
             raise ValueError("Usuário não encontrado.")
-        
-        # Busca o filme pelo ID
+
         filme = FilmeDao.find_filme_by_id(filme_id)
         if not filme:
             raise ValueError("Filme não encontrado.")
-        
-        # Verifica se o filme já está nos favoritos
-        if any(f["id"] == filme.id for f in usuario.favoritos):
-            raise ValueError("Filme já está na lista de filmes do usuário.")
-        
-        # Adiciona o filme aos favoritos do usuário
-        usuario.favoritos.append(filme.dict())
 
-        # Atualiza os dados no arquivo JSON
-        # Atualiza o usuário encontrado
-        for i, u in enumerate(usuarios):
-            if u.id == usuario_id:  # Acesse o atributo id diretamente
-                usuarios[i] = usuario.dict()  # Use o método dict() para converter o objeto em dicionário
-                break
+        if any(f.id == filme.id for f in usuario.favoritos):
+            raise ValueError("Filme já está na lista de favoritos do usuário.")
 
-
-        # Escreve as alterações no arquivo
-        cls._write_usuarios(usuarios)
+        usuario.favoritos.append(filme)
+        cls.update_usuario(usuario_id, usuario)
 
 
     @classmethod
-    def remover_filme_de_usuario(cls, usuario_id: int, filme_id: int):
-        usuarios = cls._read_usuarios()
+    def remove_filme_de_usuario(cls, usuario_id: int, filme_id: int) -> bool:
         usuario = cls.find_usuario_by_id(usuario_id)
-        filme = FilmeDao.find_filme_by_id(filme_id)
-
         if not usuario:
             raise ValueError("Usuário não encontrado.")
-        
-        if not filme:
-            raise ValueError("Filme não encontrado.")
 
-        if filme in usuario.favoritos:  # Removendo o filme dos favoritos
-            usuario.favoritos.remove(filme)
-            cls._write_usuarios(usuarios)
-        else:
-            raise ValueError("Filme não encontrado na lista de filmes do usuário.")
+        filme = next((f for f in usuario.favoritos if f.id == filme_id), None)
+        if not filme:
+            raise ValueError("Filme não encontrado na lista de favoritos.")
+
+        usuario.favoritos.remove(filme)
+        cls.update_usuario(usuario_id, usuario)
+        return True
