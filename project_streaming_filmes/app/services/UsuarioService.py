@@ -39,7 +39,6 @@ class UsuarioService:
         if not filme:
             raise ValueError("Filme não encontrado.")
         
-        # Chama o método do DAO para adicionar o filme ao usuário
         UsuarioDao.add_filme_a_usuario(usuario_id, filme_id)
 
     @staticmethod
@@ -52,5 +51,4 @@ class UsuarioService:
         if not filme:
             raise ValueError("Filme não encontrado na lista de favoritos.")
 
-        # Chama o método do DAO para remover o filme da lista de favoritos do usuário
         UsuarioDao.remove_filme_de_usuario(usuario_id, filme_id)

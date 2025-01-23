@@ -12,10 +12,20 @@ USUARIOS_FILE = os.path.join(os.path.dirname(__file__), '../data/usuarios.json')
 class UsuarioDao:
     @staticmethod
     def _read_usuarios() -> List[Usuario]:
+        """
+        Lê o arquivo de usuários e retorna uma lista de objetos Usuario.
+
+        Retorna:
+            List[Usuario]: Lista de objetos Usuario carregados do arquivo JSON.
+        
+        Lança:
+            FileNotFoundError: Se o arquivo usuarios.json não for encontrado.
+        """
         try:
             with open(USUARIOS_FILE, 'r') as u:
+
                 usuarios = json.load(u)
-                # Converte cada usuário e seus favoritos para objetos
+    
                 return [Usuario(**{
                     **usuario,
                     "favoritos": [Filme(**f) for f in usuario.get("favoritos", [])]
@@ -25,17 +35,38 @@ class UsuarioDao:
 
     @staticmethod
     def _write_usuarios(usuarios: List[Usuario]):
+        """
+        Grava a lista de usuários no arquivo JSON.
+
+        Parâmetros:
+            usuarios (List[Usuario]): Lista de usuários a ser salva no arquivo JSON.
+        """
         with open(USUARIOS_FILE, 'w') as u:
-            # Serializa os usuários e seus favoritos
+            
             json.dump([usuario.dict() for usuario in usuarios], u, indent=4)
 
     @classmethod
     def _get_novo_id(cls) -> int:
+        """
+        Gera um novo ID para o próximo usuário a ser adicionado.
+
+        Retorna:
+            int: O novo ID para o usuário.
+        """
         usuarios = cls._read_usuarios()
         return max((u.id for u in usuarios), default=0) + 1
 
     @classmethod
     def add_usuario(cls, usuario: Usuario):
+        """
+        Adiciona um novo usuário à base de dados.
+
+        Parâmetros:
+            usuario (Usuario): O objeto usuário a ser adicionado.
+        
+        Lança:
+            ValueError: Se já existir um usuário com o mesmo ID.
+        """
         usuarios = cls._read_usuarios()
         if usuario.id is None:
             usuario.id = cls._get_novo_id()
@@ -48,15 +79,39 @@ class UsuarioDao:
 
     @classmethod
     def get_all_usuarios(cls) -> List[Usuario]:
+        """
+        Retorna todos os usuários registrados.
+
+        Retorna:
+            List[Usuario]: Lista de usuários.
+        """
         return cls._read_usuarios()
 
     @classmethod
     def find_usuario_by_id(cls, usuario_id: int) -> Optional[Usuario]:
+        """
+        Busca um usuário pelo ID.
+
+        Parâmetros:
+            usuario_id (int): O ID do usuário a ser buscado.
+
+        Retorna:
+            Optional[Usuario]: O usuário correspondente ao ID, ou None se não encontrado.
+        """
         usuarios = cls._read_usuarios()
         return next((usuario for usuario in usuarios if usuario.id == usuario_id), None)
 
     @classmethod
     def delete_usuario(cls, usuario_id: int) -> bool:
+        """
+        Deleta um usuário pelo ID.
+
+        Parâmetros:
+            usuario_id (int): O ID do usuário a ser deletado.
+
+        Retorna:
+            bool: True se o usuário foi deletado, False caso contrário.
+        """
         usuarios = cls._read_usuarios()
         usuario = cls.find_usuario_by_id(usuario_id)
         if usuario:
@@ -67,6 +122,16 @@ class UsuarioDao:
 
     @classmethod
     def update_usuario(cls, usuario_id: int, usuario_atualizado: Usuario) -> bool:
+        """
+        Atualiza as informações de um usuário existente.
+
+        Parâmetros:
+            usuario_id (int): O ID do usuário a ser atualizado.
+            usuario_atualizado (Usuario): O objeto de usuário com as novas informações.
+
+        Retorna:
+            bool: True se o usuário foi atualizado, False caso contrário.
+        """
         if usuario_atualizado.id is None:
             usuario_atualizado.id = usuario_id  # Define o id se ele não foi passado
 
@@ -78,9 +143,18 @@ class UsuarioDao:
                 return True
         return False
 
-
     @classmethod
     def add_filme_a_usuario(cls, usuario_id: int, filme_id: int):
+        """
+        Adiciona um filme à lista de favoritos de um usuário.
+
+        Parâmetros:
+            usuario_id (int): O ID do usuário ao qual o filme será adicionado.
+            filme_id (int): O ID do filme a ser adicionado aos favoritos.
+        
+        Lança:
+            ValueError: Se o usuário ou filme não for encontrado, ou se o filme já estiver nos favoritos.
+        """
         usuario = cls.find_usuario_by_id(usuario_id)
         if not usuario:
             raise ValueError("Usuário não encontrado.")
@@ -95,9 +169,21 @@ class UsuarioDao:
         usuario.favoritos.append(filme)
         cls.update_usuario(usuario_id, usuario)
 
-
     @classmethod
     def remove_filme_de_usuario(cls, usuario_id: int, filme_id: int) -> bool:
+        """
+        Remove um filme da lista de favoritos de um usuário.
+
+        Parâmetros:
+            usuario_id (int): O ID do usuário ao qual o filme será removido.
+            filme_id (int): O ID do filme a ser removido dos favoritos.
+
+        Retorna:
+            bool: True se o filme foi removido com sucesso, False caso contrário.
+        
+        Lança:
+            ValueError: Se o usuário ou filme não for encontrado, ou se o filme não estiver nos favoritos.
+        """
         usuario = cls.find_usuario_by_id(usuario_id)
         if not usuario:
             raise ValueError("Usuário não encontrado.")
