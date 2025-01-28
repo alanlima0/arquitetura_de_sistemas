@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-4">Adicionar Filme</h2>
+        <form action="/filmes" method="post">
+            <div class="mb-3">
+                <label for="titulo" class="form-label">Título</label>
+                <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Cronicas de Narnia" required>
+            </div>
+            <div class="mb-3">
+                <label for="genero" class="form-label">Gênero</label>
+                <input type="text" class="form-control" id="genero" name="genero" placeholder="Ação" required>
+            </div>
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3" placeholder="Filme de muita ação passado na roma antiga." required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="ano" class="form-label">Ano de Lançamento</label>
+                <input type="number" class="form-control" id="ano" name="ano" min="1900" max="2100" placeholder="2024" required>
+            </div>
+            <div class="mb-3">
+                <label for="avaliacao" class="form-label">Avaliação</label>
+                <input type="number" class="form-control" id="avaliacao" name="avaliacao" step="0.1" min="0" max="10" placeholder="5.5" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar Filme</button>
+        </form>
+    </div>
+</body>
+{% endblock %}
