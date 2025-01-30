@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Streaming Filmes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Cabeçalho da Home -->
+    <div class="jumbotron text-center bg-dark text-white">
+        <h1 class="display-4">Bem-vindo ao Streaming Filmes!</h1>
+        <p class="lead">A sua plataforma de filmes favorita, com os melhores títulos e as últimas novidades.</p>
+        <a class="btn btn-primary btn-lg" href="/tela_listar_filmes" role="button">
+            Ver Filmes
+        </a>
+    </div>
+
+    <!-- Seção de Filmes em Destaque -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Filmes em Destaque</h2>
+        </div>
+        <!-- Filme 1 -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/300x450?text=Filme+1" class="card-img-top" alt="Filme 1">
+                <div class="card-body">
+                    <h5 class="card-title">Filme Ação 1</h5>
+                    <p class="card-text">Sinopse curta do Filme Ação 1. Uma história empolgante de ação!</p>
+                    <a href="#" class="btn btn-info btn-block">Saiba mais</a>
+                </div>
+            </div>
+        </div>
+        <!-- Filme 2 -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/300x450?text=Filme+2" class="card-img-top" alt="Filme 2">
+                <div class="card-body">
+                    <h5 class="card-title">Filme Aventura 2</h5>
+                    <p class="card-text">Sinopse curta do Filme Aventura 2. Uma jornada cheia de emoção!</p>
+                    <a href="#" class="btn btn-info btn-block">Saiba mais</a>
+                </div>
+            </div>
+        </div>
+        <!-- Filme 3 -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="https://via.placeholder.com/300x450?text=Filme+3" class="card-img-top" alt="Filme 3">
+                <div class="card-body">
+                    <h5 class="card-title">Filme Comédia 3</h5>
+                    <p class="card-text">Sinopse curta do Filme Comédia 3. Uma comédia que vai te fazer rir!</p>
+                    <a href="#" class="btn btn-info btn-block">Saiba mais</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Categorias -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Categorias Populares</h2>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-dark">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Ação</h5>
+                    <a href="/tela_filmes_categoria/acao" class="btn btn-light">Ver Ação</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Comédia</h5>
+                    <a href="/tela_filmes_categoria/comedia" class="btn btn-light">Ver Comédia</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Drama</h5>
+                    <a href="/tela_filmes_categoria/drama" class="btn btn-light">Ver Drama</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-success">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Suspense</h5>
+                    <a href="/tela_filmes_categoria/suspense" class="btn btn-light">Ver Suspense</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Testemunhos -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">O que nossos usuários dizem</h2>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">"A melhor plataforma de filmes!"</h5>
+                    <p class="card-text">"Adoro a variedade de filmes disponíveis e a interface é super intuitiva. Me sinto no cinema!"</p>
+                    <footer class="blockquote-footer">Ana Silva, Usuária</footer>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">"Cinema no conforto da minha casa!"</h5>
+                    <p class="card-text">"Com a plataforma, posso assistir aos meus filmes favoritos em qualquer lugar e a qualquer momento!"</p>
+                    <footer class="blockquote-footer">Carlos Souza, Usuário</footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 from app.controllers.FilmeController import router as filme_router
 from app.controllers.UsuarioController import router as usuario_router
-from app.views.FilmeView import router as filme_view_router  # Corrigido
+from app.views.FilmeView import router as filme_view_router
+from app.views.UsuarioView import router as usuario_view_router
 
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
@@ -19,3 +20,4 @@ app.include_router(usuario_router, tags=["API - Usuários"])
 
 # Incluindo as views
 app.include_router(filme_view_router, tags=["Views - Filmes"])
+app.include_router(usuario_view_router, tags=["Views - Usuários"])
