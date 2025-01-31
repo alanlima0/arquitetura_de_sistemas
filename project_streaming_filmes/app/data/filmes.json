@@ -14,5 +14,13 @@
         "descricao": "Filme que se passa em um planeta devastado",
         "ano": 2018,
         "avaliacao": 4.5
+    },
+    {
+        "id": 10,
+        "titulo": "The Flash",
+        "genero": "Fantasia",
+        "descricao": "Filme estrelado por ",
+        "ano": 2023,
+        "avaliacao": 4.0
     }
 ]

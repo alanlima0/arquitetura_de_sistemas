@@ -11,7 +11,8 @@ templates = Jinja2Templates(directory="app/templates/")
 
 @router.get("/", response_class=HTMLResponse)
 def tela_home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    filmes= FilmeService.get_all_filmes()
+    return templates.TemplateResponse("index.html", {"request": request,"filmes":filmes})
 
 @router.get("/tela_listar_filmes", response_class=HTMLResponse)
 def listar_filmes(request: Request):
@@ -30,3 +31,4 @@ def tela_form(request: Request):
 def tela_editar(request: Request, filme_id: int):
     filme = FilmeService.find_filme_by_id(filme_id)
     return templates.TemplateResponse("filmes/editar_filme.html",{"request":request, "filme":filme})
+
